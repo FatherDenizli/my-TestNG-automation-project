@@ -28,7 +28,7 @@ public class HomePageTests {
 
 //      4) Now click on Home menu button
       ReusableMethods.waitFor(5);
-      homePage.HomeButton.click();
+      JSUtils.clickElementByJS(homePage.HomeButton);
       ReusableMethods.waitFor(5);
 
 
