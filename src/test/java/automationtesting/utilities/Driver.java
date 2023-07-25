@@ -11,6 +11,8 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 
 public class Driver {
     //    Driver.getDriver(); -> driver
@@ -20,8 +22,10 @@ public class Driver {
         if (driver==null){
             switch (ConfigReader.getProperty("browser")) {
                 case "chrome":
+
                     WebDriverManager.chromedriver().setup();
                     driver = new ChromeDriver();
+
                     break;
                 case "firefox":
                     WebDriverManager.firefoxdriver().setup();

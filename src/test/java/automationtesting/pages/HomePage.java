@@ -18,10 +18,10 @@ public class HomePage {
     public WebElement shopButton;
 
 
-    @FindBy(xpath ="//*[@id=\"content\"]/nav/a" )
-    public WebElement HomeButton;
-    //*[@id="content"]/nav/a
-    @FindBy(xpath ="//*[text()='Add to basket']" )
+    @FindBy(xpath ="//*[text()='Home']" )
+    public WebElement homeButton;
+
+     @FindBy(xpath ="//*[text()='Add to basket']" )
     public List<WebElement> addToBasketButton;
 
 
