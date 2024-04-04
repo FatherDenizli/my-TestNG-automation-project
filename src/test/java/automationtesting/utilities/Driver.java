@@ -1,18 +1,13 @@
 package automationtesting.utilities;
 
-import automationtesting.utilities.ConfigReader;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
 
 public class Driver {
     //    Driver.getDriver(); -> driver
@@ -20,23 +15,23 @@ public class Driver {
     //    getDriver() is used to instantiate the driver object
     public static WebDriver getDriver(){
         if (driver==null){
-            switch (ConfigReader.getProperty("browser")) {
+            switch (ConfigurationReader.getProperty("browser")) {
                 case "chrome":
 
-                    WebDriverManager.chromedriver().setup();
+                    //WebDriverManager.chromedriver().setup();
                     driver = new ChromeDriver();
 
                     break;
                 case "firefox":
-                    WebDriverManager.firefoxdriver().setup();
+                   // WebDriverManager.firefoxdriver().setup();
                     driver=new FirefoxDriver();
                     break;
                 case "chrome-headless":
-                    WebDriverManager.chromedriver().setup();
+                   // WebDriverManager.chromedriver().setup();
                     driver = new ChromeDriver(new ChromeOptions().setHeadless(true));
                     break;
                 case "edge":
-                    WebDriverManager.edgedriver().setup();
+                   // WebDriverManager.edgedriver().setup();
                     driver=new EdgeDriver();
                     break;
             }

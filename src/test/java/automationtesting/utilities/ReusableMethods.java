@@ -1,10 +1,9 @@
-package automationtesting.utilities;
+package comautomationtesting.utilities;
 
-import org.apache.commons.io.FileUtils;
+import automationtesting.utilities.Driver;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
-import org.testng.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,26 +15,26 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
-
 public class ReusableMethods {
-
-
+    private static int timeout = 5;
 
     public static String getScreenshot(String name) throws IOException {
         // naming the screenshot with the current date to avoid duplication
         String date = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+
         // TakesScreenshot is an interface of selenium that takes the screenshot
         TakesScreenshot ts = (TakesScreenshot) Driver.getDriver();
         File source = ts.getScreenshotAs(OutputType.FILE);
         // full path to the screenshot location
-        String target = System.getProperty("user.dir") + "/test-output/Screenshots/" + name + date + ".png";
+        String target = System.getProperty("user.dir") + "/raporlar/Screenshots/" + name + date + ".png";
+
         File finalDestination = new File(target);
         // save the screenshot to the path given
-        FileUtils.copyFile(source, finalDestination);
+        //FileUtils.copyFile(source, finalDestination);
+
         return target;
     }
+
     //========Switching Window=====//
     public static void switchToWindow(String targetTitle) {
         String origin = Driver.getDriver().getWindowHandle();
@@ -47,11 +46,13 @@ public class ReusableMethods {
         }
         Driver.getDriver().switchTo().window(origin);
     }
+
     //========Hover Over=====//
     public static void hover(WebElement element) {
         Actions actions = new Actions(Driver.getDriver());
         actions.moveToElement(element).perform();
     }
+
     //==========Return a list of string given a list of Web Element====////
     public static List<String> getElementsText(List<WebElement> list) {
         List<String> elemTexts = new ArrayList<>();
@@ -62,6 +63,7 @@ public class ReusableMethods {
         }
         return elemTexts;
     }
+
     //========Returns the Text of the element given an element locator==//
     public static List<String> getElementsText(By locator) {
         List<WebElement> elems = Driver.getDriver().findElements(locator);
@@ -73,8 +75,8 @@ public class ReusableMethods {
         }
         return elemTexts;
     }
-    //   HARD WAIT WITH THREAD.SLEEP
-//   waitFor(5);  => waits for 5 second => Thread.sleep(5000)
+
+    //===============Thread.sleep Wait==============//
     public static void waitFor(int sec) {
         try {
             Thread.sleep(sec * 1000);
@@ -82,34 +84,14 @@ public class ReusableMethods {
             e.printStackTrace();
         }
     }
+
     //===============Explicit Wait==============//
-    public static WebElement waitForVisibility(WebElement element, int timeout) {
-        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(timeout));
+    public static WebElement waitForVisibility(WebElement element, int timeToWaitInSec) {
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
         return wait.until(ExpectedConditions.visibilityOf(element));
     }
-    public static WebElement waitForVisibility(By locator, int timeout) {
-        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(timeout));
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-    }
-    public static WebElement waitForClickablility(WebElement element, int timeout) {
-        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(timeout));
-        return wait.until(ExpectedConditions.elementToBeClickable(element));
-    }
-    public static WebElement waitForClickablility(By locator, int timeout) {
-        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(timeout));
-        return wait.until(ExpectedConditions.elementToBeClickable(locator));
-    }
-    public static void clickWithTimeOut(WebElement element, int timeout) {
-        for (int i = 0; i < timeout; i++) {
-            try {
-                element.click();
-                return;
-            } catch (WebDriverException e) {
-                waitFor(1);
-            }
-        }
-    }
-    public static void waitForPageToLoad(long timeout) {
+
+    public static void waitForPageToLoad(long timeOutInSeconds) {
         ExpectedCondition<Boolean> expectation = new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver driver) {
                 return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
@@ -117,20 +99,19 @@ public class ReusableMethods {
         };
         try {
             System.out.println("Waiting for page to load...");
-            WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(timeout));
+            WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
             wait.until(expectation);
         } catch (Throwable error) {
             System.out.println(
-                    "Timeout waiting for Page Load Request to complete after " + timeout + " seconds");
+                    "Timeout waiting for Page Load Request to complete after " + timeOutInSeconds + " seconds");
         }
     }
+
     //======Fluent Wait====//
-    public static WebElement fluentWait(final WebElement webElement, int timeout) {
-        //FluentWait<WebDriver> wait = new FluentWait<WebDriver>(Driver.getDriver()).withTimeout(timeinsec, TimeUnit.SECONDS).pollingEvery(timeinsec, TimeUnit.SECONDS);
+    public static WebElement fluentWait(final WebElement webElement, int timeinsec) {
         FluentWait<WebDriver> wait = new FluentWait<WebDriver>(Driver.getDriver())
-                .withTimeout(Duration.ofSeconds(3))//Wait 3 second each time
-                .pollingEvery(Duration.ofSeconds(1))////Check for the element every 1 second
-                .ignoring(NoSuchMethodException.class);
+                .withTimeout(Duration.ofSeconds(15)).pollingEvery(Duration.ofSeconds(15))
+                .ignoring(NoSuchElementException.class);
         WebElement element = wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
                 return webElement;
@@ -138,6 +119,7 @@ public class ReusableMethods {
         });
         return element;
     }
+
     /**
      * Performs double click action on an element
      * @param element
@@ -145,6 +127,7 @@ public class ReusableMethods {
     public static void doubleClick(WebElement element) {
         new Actions(Driver.getDriver()).doubleClick(element).build().perform();
     }
+
     /**
      * @param element
      * @param check
@@ -160,6 +143,7 @@ public class ReusableMethods {
             }
         }
     }
+
     /**
      * Selects a random value from a dropdown list and returns the selected Web Element
      * @param select
@@ -172,66 +156,216 @@ public class ReusableMethods {
         select.selectByIndex(optionIndex);
         return select.getFirstSelectedOption();
     }
-    /**
-     * Verifies whether the element matching the provided locator is displayed on page
-     * fails if the element matching the provided locator is not found or not displayed
-     *
-     * @param by
-     */
-    public static void verifyElementDisplayed(By by) {
-        try {
-            assertTrue("Element not visible: " + by, Driver.getDriver().findElement(by).isDisplayed());
-        } catch (NoSuchElementException e) {
-            Assert.fail("Element not found: " + by);
+
+    public static void waitAndClick(WebElement element, int timeout) {
+        for (int i = 0; i < timeout; i++) {
+            try {
+                element.click();
+                return;
+            } catch (WebDriverException e) {
+                wait(1);
+            }
         }
     }
-    /**
-     * Verifies whether the element matching the provided locator is NOT displayed on page
-     * fails if the element matching the provided locator is not found or not displayed
-     *
-     * @param by
-     */
-    public static void verifyElementNotDisplayed(By by) {
+
+    public static void waitAndClick(WebElement element) {
+        for (int i = 0; i < timeout; i++) {
+            try {
+                element.click();
+                return;
+            } catch (WebDriverException e) {
+                wait(1);
+            }
+        }
+    }
+
+    public static void waitAndSendText(WebElement element, String text, int timeout) {
+        for (int i = 0; i < timeout; i++) {
+            try {
+                element.sendKeys(text);
+                return;
+            } catch (WebDriverException e) {
+                wait(1);
+            }
+        }
+    }
+
+    public static void waitAndSendText(WebElement element, String text) {
+        for (int i = 0; i < timeout; i++) {
+            try {
+                element.sendKeys(text);
+                return;
+            } catch (WebDriverException e) {
+                wait(1);
+            }
+        }
+    }
+
+    public static void waitAndSendTextWithDefaultTime(WebElement element, String text) {
+        for (int i = 0; i < timeout; i++) {
+            try {
+                element.sendKeys(text);
+                return;
+            } catch (WebDriverException e) {
+                wait(1);
+            }
+        }
+    }
+
+    public static String waitAndGetText(WebElement element, int timeout) {
+        String text = "";
+        for (int i = 0; i < timeout; i++) {
+            try {
+                text = element.getText();
+                return text;
+            } catch (WebDriverException e) {
+                wait(1);
+            }
+        }
+        return null;
+    }
+
+    public static void wait2(int sec) {
         try {
-            assertFalse("Element should not be visible: " + by, Driver.getDriver().findElement(by).isDisplayed());
+            Thread.sleep(1000 * sec);
         } catch (NoSuchElementException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        } catch (StaleElementReferenceException e) {
+            e.printStackTrace();
+        } catch (ElementClickInterceptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    /**
-     * Verifies whether the element matching the provided WebElement is NOT displayed on page
-     * fails if the element matching the WebElement is not found or not displayed
-     * @paramWebElement
-     */
-    public static void verifyElementNotDisplayed(WebElement element) {
+
+    //5 seconds
+    public static void waitAndClickElement(WebElement element, int seconds) {
+        for (int i = 0; i < seconds; i++) {
+
+            try {
+                element.click();
+                break;
+            } catch (Exception e) {
+                wait2(1);
+            }
+        }
+    }
+
+    public static void wait(int secs) {
+
         try {
-            assertFalse("Element should not be visible: " + element, element.isDisplayed());
+            Thread.sleep(1000 * secs);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
         } catch (NoSuchElementException e) {
+            e.printStackTrace();
+        } catch (StaleElementReferenceException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public static WebElement waitForVisibility(By locator, int timeout) {
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(timeout));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    public static Boolean waitForInVisibility(By locator, int timeout) {
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(timeout));
+        return wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+
+    public static WebElement waitForClickablility(WebElement element, int timeout) {
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(timeout));
+        return wait.until(ExpectedConditions.elementToBeClickable(element));
+    }
+
+    public static WebElement waitForClickablility(By locator, int timeout) {
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(timeout));
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    public static void executeJScommand(WebElement element, String command) {
+        JavascriptExecutor jse = (JavascriptExecutor) Driver.getDriver();
+        jse.executeScript(command, element);
+    }
+
+    public static void selectAnItemFromDropdown(WebElement item, String selectableItem) {
+        wait(5);
+        Select select = new Select(item);
+        for (int i = 0; i < select.getOptions().size(); i++) {
+            if (select.getOptions().get(i).getText().equalsIgnoreCase(selectableItem)) {
+                select.getOptions().get(i).click();
+                break;
+            }
+        }
+    }
+
     /**
-     * Verifies whether the element is displayed on page
-     * fails if the element is not found or not displayed
+     * Clicks on an element using JavaScript
      *
      * @param element
      */
-    public static void verifyElementDisplayed(WebElement element) {
-        try {
-            assertTrue("Element not visible: " + element, element.isDisplayed());
-        } catch (NoSuchElementException e) {
-            Assert.fail("Element not found: " + element);
+    public static void clickWithJS(WebElement element) {
+        ((JavascriptExecutor) Driver.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
+        ((JavascriptExecutor) Driver.getDriver()).executeScript("arguments[0].click();", element);
+    }
+
+    /**
+     * Clicks on an element using JavaScript
+     *
+     * @param elements
+     */
+    public static void clickWithJSAsList(List<WebElement> elements) {
+        for (WebElement each : elements) {
+            ((JavascriptExecutor) Driver.getDriver()).executeScript("arguments[0].scrollIntoView(true);", waitForVisibility(each, 5));
+            ((JavascriptExecutor) Driver.getDriver()).executeScript("arguments[0].click();", each);
         }
     }
-     //DRY
 
-    // Dont
-    //Repeat
-    //Yourself
+    public static void selectByVisibleText(WebElement element, String text) {
+        Select objSelect = new Select(element);
+        objSelect.selectByVisibleText(text);
+    }
 
+    public static void selectByIndex(WebElement element, int index) {
+        Select objSelect = new Select(element);
+        objSelect.selectByIndex(index);
+    }
 
+    public static void selectByValue(WebElement element, String value) {
+        Select objSelect = new Select(element);
+        List<WebElement> elementCount = objSelect.getOptions();
+        objSelect.selectByValue(value);
+        System.out.println("number of elements: " + elementCount.size());
+    }
 
+    public static void sleep(int timeOut) {
+        try {
+            Thread.sleep(timeOut);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public static void waitAndClickLocationText(WebElement element, String value) {
+        Driver.getDriver().findElement(By.xpath("//*[text()='" + value + "']")).click();
+    }
 
+    public static void uploadFile(String gonderilecekDosyaContentRoot){
+        String herkesteFarkliOlan = System.getProperty("user.dir");
+        String herkesteAyniOlan = gonderilecekDosyaContentRoot;
+        String dosyaYolu= herkesteFarkliOlan+herkesteAyniOlan;
+    }
 
+    public static void scrollIntoViewJS(WebElement element) {
+        JavascriptExecutor jsexecutor = ((JavascriptExecutor) Driver.getDriver());
+        jsexecutor.executeScript("arguments[0].scrollIntoView(true);", element);
+    }
 }

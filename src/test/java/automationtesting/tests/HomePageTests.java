@@ -1,24 +1,12 @@
 package automationtesting.tests;
 
 import automationtesting.pages.HomePage;
-import automationtesting.utilities.ConfigReader;
+import automationtesting.utilities.ConfigurationReader;
 import automationtesting.utilities.Driver;
-import automationtesting.utilities.JSUtils;
 
-import automationtesting.utilities.ReusableMethods;
+
 import org.junit.Assert;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
-
-import java.time.Duration;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 
 public class HomePageTests {
@@ -29,8 +17,28 @@ public class HomePageTests {
   public void Case_1() {
 //      1) Open the browser
 //      2) Enter the URL “http://practice.automationtesting.in/”
-    Driver.getDriver().get(ConfigReader.getProperty("url_test_automationtesting"));
+    Driver.getDriver().get(ConfigurationReader.getProperty("url_test_automationtesting"));
+    //1) Open the browser
+    //2) Enter the URL “http://practice.automationtesting.in/”
+  //  Driver.getDriver().get(ConfigurationReader.getProperty("au_url"));
 
+    //3) Click on Shop Menu
+//    comautomationtesting.utilities.ReusableMethods.clickWithJS(homePage.shopButton);
+//    Driver.getDriver().navigate().refresh();
+//    comautomationtesting.utilities.ReusableMethods.waitAndClick(homePage.shopButton,2);
+
+    //4) Now click on Home menu button
+    //homePage.homeButton.click();
+    Driver.getDriver().navigate().refresh();
+    comautomationtesting.utilities.ReusableMethods.waitAndClick(homePage.homeButton, 3);
+
+    //5) Test whether the Home page has Three Sliders only
+    //6) The Home page must contain only three sliders
+    //int expectedSlidersNumber = 3;
+ //   int actualSliderNumber = homePage.threeSlidersOnly.size();
+   // Assert.assertEquals(actualSliderNumber, expectedSlidersNumber);
+
+   // Driver.closeDriver();
 
 //
 ////      3) Click on Shop Menu

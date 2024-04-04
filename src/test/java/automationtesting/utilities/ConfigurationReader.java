@@ -1,7 +1,7 @@
 package automationtesting.utilities;
 import java.io.FileInputStream;
 import java.util.Properties;
-public class ConfigReader {
+public class ConfigurationReader {
 
 
     //This class reads the configuration.properties file
