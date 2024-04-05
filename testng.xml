@@ -3,7 +3,7 @@
 <suite name="All Test Suite">
     <test verbose="2" preserve-order="true" name="Test" thread-count="5">
          <classes>
-          <class name="mavenforjenkins.UITest"/>
+          <class name="informativeness.UITest"/>
         </classes>
     </test>
 </suite>

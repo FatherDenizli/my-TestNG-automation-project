@@ -18,20 +18,20 @@ public class Driver {
             switch (ConfigurationReader.getProperty("browser")) {
                 case "chrome":
 
-                    //WebDriverManager.chromedriver().setup();
+                    WebDriverManager.chromedriver().setup();
                     driver = new ChromeDriver();
 
                     break;
                 case "firefox":
-                   // WebDriverManager.firefoxdriver().setup();
+                    // WebDriverManager.firefoxdriver().setup();
                     driver=new FirefoxDriver();
                     break;
                 case "chrome-headless":
-                   // WebDriverManager.chromedriver().setup();
-                    driver = new ChromeDriver(new ChromeOptions().setHeadless(true));
-                    break;
+//                    // WebDriverManager.chromedriver().setup();
+//                    driver = new ChromeDriver(new ChromeOptions().setHeadless(true));
+//                    break;
                 case "edge":
-                   // WebDriverManager.edgedriver().setup();
+                    // WebDriverManager.edgedriver().setup();
                     driver=new EdgeDriver();
                     break;
             }
